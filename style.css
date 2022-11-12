@@ -133,7 +133,7 @@ button:hover::after {
   margin-right: 0.5rem;
 }
 #todos-list .todo i {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 #todos-list .todo p {
   flex: 1;
