@@ -10,23 +10,24 @@ form.addEventListener("submit", function (event) {
 });
 
 const saveTodo = () => {
-  const newTodo = input.value;
-  const lowerTodos = todos.map(function (value) {
-    return value.toLowerCase();
+  const todoValue = input.value;
+  const lowerTodos = todos.map(function (todo) {
+    return todo.value.toLowerCase();
   });
-  if (newTodo === "") {
+  if (todoValue === "") {
     alert("To do cannot be empty.");
-  } else if (lowerTodos.includes(newTodo.toLowerCase())) {
+  } else if (lowerTodos.includes(todoValue.toLowerCase())) {
     alert("To do is already in the list.");
   } else {
     const todo = {
-      value: newTodo,
+      value: todoValue,
       checked: false,
       color: "#000000",
     };
   todos.push(todo);
   }
   input.value = "";
+  console.log(todos);
 };
 
 const makeTodos = () => {
@@ -44,6 +45,13 @@ const makeTodos = () => {
     </div>`;
   });
 };
+
+document.body.addEventListener("click", function (evt) {
+  if (evt.target.parentNode.className === 'todo') {
+    const id = evt.target.parentNode.id;
+    console.log(id);
+  }
+}, false);
 
 const inputTodo = (todo) => {
   localStorage.setItem("todos", JSON.stringify(todo));
