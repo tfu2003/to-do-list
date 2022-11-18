@@ -38,10 +38,11 @@ const makeTodos = () => {
       <i 
         class="bi ${todo.checked ? "bi-check-circle-fill" : "bi-circle"}"
         style="color : ${todo.color}"
+        data-action="check"
         ></i> 
         <p class="">${todo.value}</p>
-        <i class="bi bi-pencil-square"></i>
-        <i class="bi bi-trash"></i>
+        <i class="bi bi-pencil-square" data-action="edit"></i>
+        <i class="bi bi-trash" data-action="delete"></i>
     </div>`;
   });
 };
@@ -49,9 +50,23 @@ const makeTodos = () => {
 document.body.addEventListener("click", function (evt) {
   if (evt.target.parentNode.className === 'todo') {
     const id = evt.target.parentNode.id;
-    console.log(id);
+    const action = evt.target.dataset.action;
+    action === "check" && checkTodo(id); 
+    action === "edit" && editTodo(id); 
+    action === "delete" && deleteTodo(id); 
   }
 }, false);
+
+const checkTodo = (id) => {
+  let todo = todos[id];
+  todo = {
+    value: todo.value,
+    checked: !todo.checked,
+    color: todo.color,
+  };
+  todos.splice(id, 1, todo);
+  makeTodos();
+}
 
 const inputTodo = (todo) => {
   localStorage.setItem("todos", JSON.stringify(todo));
