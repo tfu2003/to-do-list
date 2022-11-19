@@ -16,9 +16,9 @@ const saveTodo = () => {
     return todo.value.toLowerCase();
   });
   if (todoValue === "") {
-    alert("To do cannot be empty.");
+    getNotification("To do cannot be empty.");
   } else if (lowerTodos.includes(todoValue.toLowerCase())) {
-    alert("To do is already in the list.");
+    getNotification("To do is already in the list.");
   } else {
     const todo = {
       value: todoValue,
@@ -79,7 +79,7 @@ const editTodo = (para, id) => {
     para.setAttribute("contenteditable", "false");
     const text = para.textContent;
     if (text == "") {
-      alert("To do cannot be empty.");
+      getNotification("To do cannot be empty.");
       makeTodos();
     } else {
       let todo = todos[id];
@@ -104,7 +104,9 @@ const deleteTodo = (id) => {
 const getNotification = (msg) => {
   notification.innerHTML = msg;
   notification.classList.add("notif-enter");
-  
+  setTimeout(() => {
+    notification.classList.remove("notif-enter");
+  }, 2000);
 }
 
 const inputTodo = (todo) => {
