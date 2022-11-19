@@ -2,12 +2,15 @@ const form = document.getElementById("todoform");
 const input = document.getElementById("newtodo");
 const todoList = document.getElementById("todos-list");
 const notification = document.querySelector(".notification")
-let todos = [];
+let todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+makeTodos();
 
 form.addEventListener("submit", function (event) {
   event.preventDefault();
   saveTodo();
   makeTodos();
+  inputTodo();
 });
 
 const saveTodo = () => {
@@ -30,7 +33,11 @@ const saveTodo = () => {
   input.value = "";
 };
 
-const makeTodos = () => {
+function makeTodos() {
+  if (todos.length === 0) {
+    todoList.innerHTML = '<center>You have nothing to do!</center>';
+    return;
+  }
   todoList.innerHTML = "";
   todos.forEach((todo, index) => {
     todoList.innerHTML += `
@@ -45,7 +52,6 @@ const makeTodos = () => {
         <i class="bi bi-trash" data-action="delete"></i>
     </div>`;
   });
-  console.log(todoList);
 };
 
 document.body.addEventListener(
@@ -72,6 +78,7 @@ const checkTodo = (id) => {
   };
   todos.splice(id, 1, todo);
   makeTodos();
+  inputTodo();
 };
 
 const editTodo = (para, id) => {
@@ -90,6 +97,7 @@ const editTodo = (para, id) => {
       }
       todos.splice(id, 1, todo);
       makeTodos();
+      inputTodo();
     }
   } else {
     para.setAttribute("contenteditable", "true");
@@ -99,6 +107,7 @@ const editTodo = (para, id) => {
 const deleteTodo = (id) => {
   todos.splice(id, 1);
   makeTodos();
+  inputTodo();
 }
 
 const getNotification = (msg) => {
@@ -109,17 +118,6 @@ const getNotification = (msg) => {
   }, 2000);
 }
 
-const inputTodo = (todo) => {
-  localStorage.setItem("todos", JSON.stringify(todo));
-};
-
-const removeTodo = (todo) => {
-  delete localStorage.getItem("todo");
-};
-
-const loadToDos = () => {
-  const todosJson = localStorage.getItem("todos");
-  if (todosJson) {
-    todos = JSON.parse(todosJson);
-  }
+const inputTodo = () => {
+  localStorage.setItem("todos", JSON.stringify(todos));
 };
