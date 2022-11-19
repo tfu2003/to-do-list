@@ -47,7 +47,7 @@ function makeTodos() {
         style="color : ${todo.color}"
         data-action="check"
         ></i> 
-        <p class="para" contenteditable="false">${todo.value}</p>
+        <p class="para ${todo.checked ? "checked" : ""}" contenteditable="false">${todo.value}</p>
         <i class="bi bi-pencil-square" data-action="edit"></i>
         <i class="bi bi-trash" data-action="delete"></i>
     </div>`;
@@ -82,11 +82,17 @@ const checkTodo = (id) => {
 };
 
 const editTodo = (para, id) => {
+  const lowerTodos = todos.map(function (todo) {
+    return todo.value.toLowerCase();
+  });
   if (para.isContentEditable) {
     para.setAttribute("contenteditable", "false");
     const text = para.textContent;
     if (text == "") {
       getNotification("To do cannot be empty.");
+      makeTodos();
+    } else if (lowerTodos.includes(text.toLowerCase())) {
+      getNotification("To do is already in the list.");
       makeTodos();
     } else {
       let todo = todos[id];
