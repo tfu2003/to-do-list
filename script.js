@@ -1,6 +1,7 @@
 const form = document.getElementById("todoform");
 const input = document.getElementById("newtodo");
 const todoList = document.getElementById("todos-list");
+const notification = document.querySelector(".notification")
 let todos = [];
 
 form.addEventListener("submit", function (event) {
@@ -24,10 +25,9 @@ const saveTodo = () => {
       checked: false,
       color: "#000000",
     };
-  todos.push(todo);
+    todos.push(todo);
   }
   input.value = "";
-  console.log(todos);
 };
 
 const makeTodos = () => {
@@ -40,22 +40,28 @@ const makeTodos = () => {
         style="color : ${todo.color}"
         data-action="check"
         ></i> 
-        <p class="">${todo.value}</p>
+        <p class="para" contenteditable="false">${todo.value}</p>
         <i class="bi bi-pencil-square" data-action="edit"></i>
         <i class="bi bi-trash" data-action="delete"></i>
     </div>`;
   });
+  console.log(todoList);
 };
 
-document.body.addEventListener("click", function (evt) {
-  if (evt.target.parentNode.className === 'todo') {
-    const id = evt.target.parentNode.id;
-    const action = evt.target.dataset.action;
-    action === "check" && checkTodo(id); 
-    action === "edit" && editTodo(id); 
-    action === "delete" && deleteTodo(id); 
-  }
-}, false);
+document.body.addEventListener(
+  "click",
+  function (evt) {
+    if (evt.target.parentNode.className === "todo") {
+      const id = evt.target.parentNode.id;
+      const action = evt.target.dataset.action;
+      const para = evt.target.parentNode.querySelector(".para");
+      action === "check" && checkTodo(id);
+      action === "edit" && editTodo(para, id);
+      action === "delete" && deleteTodo(id);
+    }
+  },
+  false
+);
 
 const checkTodo = (id) => {
   let todo = todos[id];
@@ -66,6 +72,39 @@ const checkTodo = (id) => {
   };
   todos.splice(id, 1, todo);
   makeTodos();
+};
+
+const editTodo = (para, id) => {
+  if (para.isContentEditable) {
+    para.setAttribute("contenteditable", "false");
+    const text = para.textContent;
+    if (text == "") {
+      alert("To do cannot be empty.");
+      makeTodos();
+    } else {
+      let todo = todos[id];
+      todo = {
+        value: text,
+        checked: todo.checked,
+        color: todo.color,
+      }
+      todos.splice(id, 1, todo);
+      makeTodos();
+    }
+  } else {
+    para.setAttribute("contenteditable", "true");
+  }
+};
+
+const deleteTodo = (id) => {
+  todos.splice(id, 1);
+  makeTodos();
+}
+
+const getNotification = (msg) => {
+  notification.innerHTML = msg;
+  notification.classList.add("notif-enter");
+  
 }
 
 const inputTodo = (todo) => {
